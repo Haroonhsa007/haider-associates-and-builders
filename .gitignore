@@ -4,12 +4,17 @@ node_modules/
 # Vite build and caches
 dist/
 .vite/
+.cache/
+.npm/
+*.tsbuildinfo
+vite.config.*.timestamp-*
 
 # Test and QA output
 .qa/
 coverage/
 playwright-report/
 test-results/
+blob-report/
 
 # Environment files
 .env
@@ -29,6 +34,10 @@ pnpm-debug.log*
 .vscode/
 *.swp
 *.swo
+*~
 
 # Local-only overrides
 *.local
+tmp/
+temp/
+*.tgz
