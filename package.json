@@ -13,6 +13,8 @@
     "check": "node --check js/app.js && node --check js/router.js && node --check js/components/ui.js && node --check js/components/shell.js && node --check js/pages/public.js && node --check js/pages/auth.js && node --check js/pages/dashboard.js && node --check js/pages/collections.js && node --check js/pages/details.js && node --check js/pages/reports.js && node --check js/state.js && node --check js/utils.js && node --check data/seed.js"
   },
   "dependencies": {
+    "@fontsource-variable/manrope": "^5.3.0",
+    "@fontsource/barlow-condensed": "^5.3.0",
     "lucide": "^0.544.0"
   },
   "devDependencies": {

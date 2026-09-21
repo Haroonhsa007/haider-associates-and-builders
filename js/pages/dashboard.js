@@ -26,7 +26,7 @@ export function dashboardPage(state, session) {
   const stages = ['Offer', 'Negotiation', 'Token', 'Agreement', 'Payment', 'Completed'];
   const pipelineData = stages.map(label => ({ label, value: deals.filter(item => item.stage === label).length }));
 
-  return `${pageHeader({ title: `${getGreeting()}, ${(session?.name || 'Haider').split(' ')[0]}`, subtitle: `Islamabad Real Estate Operations · ${today.toLocaleDateString('en-PK', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}` })}
+  return `${pageHeader({ eyebrow: 'Operations control', title: `${getGreeting()}, ${(session?.name || 'Haider').split(' ')[0]}`, subtitle: `Islamabad property, client and project control · ${today.toLocaleDateString('en-PK', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}` })}
     <section class="kpi-grid kpi-band" aria-labelledby="workspace-summary"><h2 class="sr-only" id="workspace-summary">Workspace summary</h2>
       ${[
         ['Active Properties', activeProperties.length, 'building-2', 'In current inventory'],
