@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Haider Associates and Builders">
+  <rect width="64" height="64" rx="8" fill="#101B35"/>
+  <polygon points="12,27 32,11 52,27 48,32 32,20 16,32" fill="#B52A32"/>
+  <rect x="16" y="29" width="10" height="23" fill="#F3EBDD"/>
+  <rect x="38" y="29" width="10" height="23" fill="#F3EBDD"/>
+  <rect x="24" y="38" width="16" height="8" fill="#F3EBDD"/>
+</svg>
