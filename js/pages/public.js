@@ -7,7 +7,7 @@ function publicHero() {
     <div class="public-hero-scrim"></div>
     <div class="public-hero-copy public-hero__content">
       <p class="public-kicker">Islamabad property and construction</p>
-      <h1>PROPERTY.<br /><span>DESIGN. BUILD.</span></h1>
+      <h1>Property decisions.<br /><span>Built properly.</span></h1>
       <p>Sale, purchase, rent, architecture and construction handled through one accountable local team.</p>
       <div class="hero-actions"><a class="btn btn-primary" href="#/properties">Browse properties</a><a class="btn btn-on-dark" href="tel:03009146600">Call 0300-9146600</a></div>
       <div class="hero-proof" aria-label="Haider Associates services"><span>Sale</span><span>Purchase</span><span>Rent</span><span>Architecture</span><span>Builders</span></div>

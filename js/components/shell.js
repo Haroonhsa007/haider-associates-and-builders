@@ -101,7 +101,7 @@ export function appShell(content, { path, state, session }) {
     <header class="topbar">
       <button class="icon-btn mobile-menu-btn" type="button" data-action="toggle-mobile-menu" aria-label="Open application menu" aria-expanded="false">${compactLogo({ reversed: false })}</button>
       <div class="topbar-title"><span>HAIDER OS</span><strong>${escapeHTML(activeItem?.label || 'Operations')}</strong></div>
-      <button class="search-trigger" type="button" data-action="open-search">${icon('search')}<span>Search properties, people and deals</span><kbd>/</kbd></button>
+      <button class="search-trigger" type="button" data-action="open-search" aria-label="Search properties, people and deals">${icon('search')}<span>Search properties, people and deals</span><kbd>/</kbd></button>
       <div class="topbar-actions">
         <span class="demo-badge">Demo workspace data</span>
         <button class="icon-btn notification-btn" type="button" data-action="toggle-notifications" aria-label="Notifications" aria-expanded="false">${icon('bell')}${unread ? `<span class="notification-count">${unread}</span>` : ''}</button>
