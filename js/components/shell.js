@@ -38,9 +38,17 @@ export function canAccess(role, routeKey) {
 
 function publicNav(path) {
   const links = [
-    ['/', 'Home'], ['/properties', 'Properties'], ['/services', 'Services'], ['/about', 'About'], ['/projects', 'Projects'], ['/contact', 'Contact'],
+    ['/', 'Home'], ['/properties', 'Properties'], ['/services', 'Services'], ['/about', 'About'], ['/contact', 'Contact'],
   ];
   return links.map(([href, label]) => `<a href="#${href}"${path === href || (href !== '/' && path.startsWith(href)) ? ' aria-current="page"' : ''}>${escapeHTML(label)}</a>`).join('');
+}
+
+export const PHONE_DISPLAY = '0300-9146600';
+export const PHONE_TEL = '03009146600';
+export const WHATSAPP = '923009146600';
+
+export function whatsappLink(message = 'Assalam o Alaikum, I would like to discuss a property with Haider Associates.') {
+  return `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(message)}`;
 }
 
 export function publicShell(content, path) {
@@ -48,16 +56,23 @@ export function publicShell(content, path) {
     <header class="public-header">
       <a class="public-brand" href="#/" aria-label="Haider Associates and Builders home">${fullLogo({ reversed: false })}</a>
       <nav class="public-nav" aria-label="Public navigation">${publicNav(path)}</nav>
-      <div class="public-header-actions"><a class="phone-link" href="tel:03009146600">${icon('phone')} 0300-9146600</a><a class="btn btn-primary" href="#/login">Open HAIDER OS</a></div>
+      <div class="public-header-actions">
+        <a class="phone-link" href="tel:${PHONE_TEL}">${icon('phone')}<span>${PHONE_DISPLAY}</span></a>
+        <a class="btn btn-whatsapp" href="${whatsappLink()}" target="_blank" rel="noreferrer">${icon('message-circle')} WhatsApp</a>
+      </div>
       <button class="icon-btn public-menu-toggle" type="button" data-action="toggle-public-menu" aria-label="Open navigation" aria-expanded="false">${icon('menu')}</button>
     </header>
     <main id="main-content" class="public-main">${content}</main>
     <footer class="public-footer">
-      <div>${fullLogo({ reversed: true })}<p>Real Estate, Architecture & Construction<br />Islamabad, Pakistan</p></div>
-      <div><h2>Contact</h2><a href="tel:03009146600">0300-9146600</a><p>Haider Cheema</p></div>
-      <div><h2>Explore</h2>${publicNav(path)}</div>
-      <p class="public-footer-note">© ${new Date().getFullYear()} Haider Associates & Builders. Demo property records are for product demonstration.</p>
+      <div>${fullLogo({ reversed: true })}<p>Sale, purchase and rent across Islamabad, plus architecture, structure, interior design and construction.<br />D-12 Markaz, Islamabad.</p></div>
+      <div><h2>Contact</h2><a href="tel:${PHONE_TEL}">${PHONE_DISPLAY}</a><a href="${whatsappLink()}" target="_blank" rel="noreferrer">WhatsApp enquiry</a><p>Haider Cheema</p></div>
+      <div><h2>Explore</h2>${publicNav(path)}<a href="#/login">Staff login</a></div>
+      <p class="public-footer-note">&copy; ${new Date().getFullYear()} Haider Associates &amp; Builders. Listings shown are sample records for this demonstration site.</p>
     </footer>
+    <div class="mobile-contact-bar">
+      <a class="btn btn-primary" href="tel:${PHONE_TEL}">${icon('phone')} Call now</a>
+      <a class="btn btn-whatsapp" href="${whatsappLink()}" target="_blank" rel="noreferrer">${icon('message-circle')} WhatsApp</a>
+    </div>
   </div>`;
 }
 

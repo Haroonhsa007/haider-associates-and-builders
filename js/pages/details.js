@@ -1,5 +1,6 @@
 import { escapeHTML, formatDate, formatPKR } from '../utils.js';
 import { emptyState, icon, propertyCard, statusBadge, timeline } from '../components/ui.js';
+import { isLandListing, plotVisual } from '../components/plot-visual.js';
 
 function entityActivities(state, id) {
   return (state.entities.activities || []).filter(item => item.entityId === id).sort((a, b) => new Date(b.timestamp || b.createdAt) - new Date(a.timestamp || a.createdAt));
@@ -15,11 +16,18 @@ function propertyDetail(item, state) {
   const visits = state.entities.visits.filter(value => value.propertyId === item.id);
   const deals = state.entities.deals.filter(value => value.propertyId === item.id);
   const docs = state.entities.documents.filter(value => value.entityId === item.id || value.entityLabel === item.code || value.entityLabel === item.title);
-  const images = [...new Set([...(item.images || []), './assets/images/properties/premium-interior.jpg', './assets/images/properties/islamabad-commercial.jpg'])].slice(0, 3);
+  // Same rule as the public site: a plot shows its site plan, not a stock interior.
+  const photos = (item.images || []).filter(Boolean);
+  const gallery = isLandListing(item) && !photos.length
+    ? `<div class="detail-gallery-plot">${plotVisual(item)}</div>`
+    : [...new Set([...photos, './assets/images/properties/premium-interior.jpg', './assets/images/properties/islamabad-commercial.jpg'])]
+      .slice(0, 3)
+      .map((image, index) => `<button type="button" data-gallery-image="${escapeHTML(image)}" aria-label="Open property image ${index + 1}"><img src="${escapeHTML(image)}" width="1200" height="800" ${index ? 'loading="lazy"' : ''} alt="${escapeHTML(item.title)} view ${index + 1}" /></button>`)
+      .join('');
   return `<article class="entity-detail property-detail">
     <header class="detail-header"><div><a class="back-link" href="#/app/properties">${icon('arrow-left')} Properties</a><p>${escapeHTML(item.code)} · ${escapeHTML(item.transactionType)}</p><h1 id="page-title" tabindex="-1">${escapeHTML(item.title)}</h1><span>${icon('map-pin')} ${escapeHTML(item.sector)}, Islamabad</span></div><div><strong>${formatPKR(item.demandPrice || item.rentPrice)}</strong>${statusBadge(item.status)}</div></header>
     ${detailActions('properties', item)}
-    <div class="detail-gallery">${images.map((image, index) => `<button type="button" data-gallery-image="${escapeHTML(image)}" aria-label="Open property image ${index + 1}"><img src="${escapeHTML(image)}" width="1200" height="800" ${index ? 'loading="lazy"' : ''} alt="${escapeHTML(item.title)} view ${index + 1}" /></button>`).join('')}</div>
+    <div class="detail-gallery">${gallery}</div>
     <nav class="detail-tabs" aria-label="Property sections"><a href="#property-overview">Overview</a><a href="#property-owner">Ownership</a><a href="#property-related">Leads & visits</a><a href="#property-documents">Documents</a><a href="#property-activity">Activity</a></nav>
     <div class="detail-columns"><div>
       <section class="detail-section" id="property-overview"><header><h2>Property information</h2></header><p class="detail-lead">${escapeHTML(item.description || 'A locally managed demo property record for the Islamabad market.')}</p><dl class="spec-grid">${[

@@ -1,3 +1,5 @@
+import { LAND_TYPES } from "../js/components/plot-visual.js";
+
 /**
  * HAIDER OS demo seed.
  *
@@ -23,17 +25,26 @@ function isoDateTime(offset = 0, hour = 10, minute = 0) {
   return date.toISOString();
 }
 
-function imagePath(folder, number) {
-  if (folder === "properties") {
-    const available = [
-      "./assets/images/properties/islamabad-villa-hero.jpg",
-      "./assets/images/properties/premium-interior.jpg",
-      "./assets/images/properties/islamabad-commercial.jpg",
-    ];
-    return available[(number - 1) % available.length];
-  }
+function imagePath(folder) {
   if (folder === "projects") return "./assets/images/projects/villa-construction.jpg";
   return "";
+}
+
+/**
+ * Photography is chosen by what the record actually is, never by index.
+ *
+ * Land records deliberately return no photograph: a plot is not a house, so the
+ * listing falls back to the site-plan drawing in components/plot-visual.js.
+ * Attaching real listing photos (the Zameen ad images, for example) to a record
+ * overrides this automatically.
+ */
+export function propertyImages(propertyType) {
+  const commercial = ["Office", "Shop", "Commercial Building"];
+  const interior = ["Apartment", "Upper Portion", "Lower Portion"];
+  if (LAND_TYPES.has(propertyType)) return [];
+  if (commercial.includes(propertyType)) return ["./assets/images/properties/islamabad-commercial.jpg"];
+  if (interior.includes(propertyType)) return ["./assets/images/properties/premium-interior.jpg"];
+  return ["./assets/images/properties/islamabad-villa-hero.jpg"];
 }
 
 const agentRows = [
@@ -183,7 +194,7 @@ function buildProperties(clients) {
       source,
       dateAdded: localDate(-105 + index * 3),
       lastUpdated: isoDateTime(-Math.max(0, 30 - index), 12 + (index % 5), 10),
-      images: [imagePath("properties", index + 1)],
+      images: propertyImages(propertyType),
       documents: [],
       notes: "Seeded demo inventory; legal title and listing authority are not verified.",
       archived: false,
@@ -360,8 +371,8 @@ function buildProjects() {
     expectedCompletion: localDate(45 + index * 38),
     status: stages.includes(status) ? status : "Lead",
     progress,
-    coverImage: imagePath("projects", index + 1),
-    image: imagePath("projects", index + 1),
+    coverImage: imagePath("projects"),
+    image: imagePath("projects"),
     documents: [],
     expenses: Math.round(contractValue * progress / 100 * 0.72),
     notes: "Demo project record; scope and financial values are sample data.",

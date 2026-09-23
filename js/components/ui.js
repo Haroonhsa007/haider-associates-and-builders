@@ -1,5 +1,6 @@
 import { createIcons, icons } from 'lucide';
 import { escapeHTML, formatDate, formatPKR } from '../utils.js';
+import { isLandListing, plotVisual } from './plot-visual.js';
 
 export function icon(name, label = '') {
   const safeLabel = escapeHTML(label);
@@ -59,15 +60,32 @@ export function loadingState() {
   </div>`;
 }
 
+/** Transaction label shown on the listing image, in brand red per the direction. */
+function transactionTag(property) {
+  const type = property.transactionType || 'Sale';
+  if (type === 'Rent') return '<span class="property-tag property-tag--rent">For Rent</span>';
+  if (type === 'Sale & Rent') return '<span class="property-tag">Sale or Rent</span>';
+  return '<span class="property-tag">For Sale</span>';
+}
+
+export function listingMedia(property) {
+  const image = property.images?.find(Boolean);
+  if (!image && isLandListing(property)) return plotVisual(property);
+  const src = image || './assets/images/properties/islamabad-villa-hero.jpg';
+  return `<img src="${escapeHTML(src)}" width="720" height="480" loading="lazy" alt="${escapeHTML(property.title)}" />`;
+}
+
 export function propertyCard(property, { publicView = false } = {}) {
-  const image = property.images?.[0] || './assets/images/properties/islamabad-villa-hero.jpg';
-  const price = property.transactionType?.includes('Rent') && property.rentPrice
-    ? `${formatPKR(property.rentPrice)} / month`
-    : formatPKR(property.demandPrice);
-  const route = publicView ? `/properties/${property.id}` : `/app/properties/${property.id}`;
+  const isRent = property.transactionType === 'Rent';
+  const price = isRent && property.rentPrice
+    ? `${formatPKR(property.rentPrice)} <small>/ month</small>`
+    : formatPKR(property.demandPrice || property.rentPrice);
+  const route = escapeHTML(publicView ? `/properties/${property.id}` : `/app/properties/${property.id}`);
+  const enquiry = `Assalam o Alaikum, I am interested in ${property.title} (${property.code}).`;
   return `<article class="property-card">
     <a class="property-media" href="#${route}" aria-label="View ${escapeHTML(property.title)}">
-      <img src="${escapeHTML(image)}" width="720" height="480" loading="lazy" alt="${escapeHTML(property.title)}" />
+      ${transactionTag(property)}
+      ${listingMedia(property)}
     </a>
     <div class="property-card-body">
       <div class="property-card-meta"><span>${escapeHTML(property.propertyType)}</span>${statusBadge(property.status)}</div>
@@ -76,8 +94,13 @@ export function propertyCard(property, { publicView = false } = {}) {
       <dl class="property-facts">
         <div><dt>Size</dt><dd>${escapeHTML(property.size)}</dd></div>
         ${property.bedrooms ? `<div><dt>Beds</dt><dd>${escapeHTML(property.bedrooms)}</dd></div>` : ''}
-        <div><dt>Price</dt><dd>${escapeHTML(price)}</dd></div>
+        ${property.bathrooms ? `<div><dt>Baths</dt><dd>${escapeHTML(property.bathrooms)}</dd></div>` : ''}
       </dl>
+      <p class="property-price">${price}</p>
+      ${publicView ? `<div class="property-card-actions">
+        <a class="btn btn-primary" href="tel:03009146600">${icon('phone')} Call</a>
+        <a class="btn btn-whatsapp" href="https://wa.me/923009146600?text=${encodeURIComponent(enquiry)}" target="_blank" rel="noreferrer">${icon('message-circle')} WhatsApp</a>
+      </div>` : ''}
     </div>
   </article>`;
 }

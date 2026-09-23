@@ -4479,14 +4479,12 @@
 
   .public-hero-copy h1 span {
     display: block;
-    color: #e4d2ad;
   }
 
   .public-kicker {
-    margin-bottom: 0.75rem !important;
-    color: #e4d2ad !important;
+    margin-bottom: 0.75rem;
     font-family: var(--font-ui);
-    font-size: 0.68rem !important;
+    font-size: 0.68rem;
     font-weight: 850;
     letter-spacing: 0.15em;
     text-transform: uppercase;

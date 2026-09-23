@@ -1,6 +1,8 @@
 import { createSeedState } from "../data/seed.js";
 
-export const STATE_VERSION = 1;
+// v2: listing photography is assigned by property type, so land records no
+// longer carry a house photo. Bumping the version re-seeds existing browsers.
+export const STATE_VERSION = 2;
 export const STORAGE_KEY = `haider-os:state:v${STATE_VERSION}`;
 export const SESSION_KEY = "haider-os:session";
 

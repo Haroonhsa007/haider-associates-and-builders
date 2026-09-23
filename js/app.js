@@ -8,6 +8,7 @@ import { matchRoute, navigate, parseLocation, startRouter } from './router.js';
 import { appShell, authShell, canAccess, publicShell } from './components/shell.js';
 import { confirmDialog, icon, openForm, renderIcons, toast } from './components/ui.js';
 import { renderPublicPage } from './pages/public.js';
+import { propertyImages } from '../data/seed.js';
 import { loginPage } from './pages/auth.js';
 import { dashboardPage } from './pages/dashboard.js';
 import { collectionPage, getEntityConfig } from './pages/collections.js';
@@ -43,10 +44,30 @@ function routeDetails(path) {
   return null;
 }
 
-function titleFor(path) {
-  if (path === '/') return 'Haider Associates & Builders | Islamabad';
+const BRAND_TITLE = 'Haider Associates & Builders';
+
+function titleFor(path, state) {
+  if (path === '/') return `${BRAND_TITLE} | Property in Islamabad`;
+
+  // A public listing is titled by the property itself, not by its record id.
+  const listing = matchRoute(path, '/properties/:id');
+  if (listing) {
+    const property = state?.entities?.properties?.find(item => item.id === listing.id);
+    if (property) return `${property.title} | ${BRAND_TITLE}`;
+  }
+
+  const publicTitles = {
+    '/properties': `Property for Sale and Rent in Islamabad | ${BRAND_TITLE}`,
+    '/services': `Services | ${BRAND_TITLE}`,
+    '/about': `About Us | ${BRAND_TITLE}`,
+    '/contact': `Contact | ${BRAND_TITLE}`,
+  };
+  if (publicTitles[path]) return publicTitles[path];
+
   const name = path.split('/').filter(Boolean).pop() || 'Home';
-  return `${name.replace(/-/g, ' ').replace(/\b\w/g, char => char.toUpperCase())} | HAIDER OS`;
+  const label = name.replace(/-/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
+  if (path.startsWith('/app') || path === '/login') return `${label} | HAIDER OS`;
+  return `Page not found | ${BRAND_TITLE}`;
 }
 
 function render(location = parseLocation(), { focus = true } = {}) {
@@ -92,7 +113,7 @@ function render(location = parseLocation(), { focus = true } = {}) {
 
     app.innerHTML = html;
     app.setAttribute('aria-busy', 'false');
-    document.title = titleFor(path);
+    document.title = titleFor(path, state);
     renderIcons();
     bindPageBehaviors();
     if (focus) window.setTimeout(() => document.getElementById('page-title')?.focus({ preventScroll: true }), 30);
@@ -128,7 +149,9 @@ async function editEntity(entity, id = null, preset = {}) {
   });
   if (!values) return;
   if (entity === 'properties' && !id) {
-    values.images = ['./assets/images/properties/islamabad-villa-hero.jpg'];
+    // Photography follows the record type. Land keeps an empty gallery so the
+    // listing renders its site plan instead of somebody else's house.
+    values.images = propertyImages(values.propertyType);
     values.isPublic = true;
     values.dateAdded = new Date().toISOString();
   }
